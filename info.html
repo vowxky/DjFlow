@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Teoría del problema del camino mínimo y el algoritmo de Dijkstra con ejemplos propios." />
+  <title>DjFlow | Teoría</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            base: "#070a14",
+            panel: "#0b1020",
+            panelSoft: "#111830",
+            line: "#1e2740",
+            textSoft: "#a3a3a3"
+          },
+          fontFamily: {
+            sansUI: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+            serifMath: ["Times New Roman", "Georgia", "serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="/src/style.css" />
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
+</head>
+<body class="min-h-screen bg-[#0f172a] text-white font-sansUI">
+
+  <nav class="border-b border-white/5 bg-panel/95 backdrop-blur">
+    <div class="max-w-[1800px] mx-auto px-6">
+      <div class="relative h-16 flex items-center justify-center">
+        <a
+          href="./index.html"
+          class="absolute left-0 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+          <span>Volver</span>
+        </a>
+        <div class="flex items-center gap-3">
+          <img src="/logo.svg" alt="Logo de DjFlow" width="36" height="36" class="h-9 w-9 shrink-0">
+          <h1 class="text-xl font-semibold tracking-tight text-white">DjFlow</h1>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="pt-20 pb-16">
+      <div class="max-w-[1800px] mx-auto px-6">
+        <div class="grid items-center gap-10 xl:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.95fr)]">
+          <div class="max-w-3xl">
+            <div class="mb-6 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur">
+              <img src="/logo.svg" alt="Logo de DjFlow" width="36" height="36" class="h-9 w-9 shrink-0">
+              <span class="text-xs uppercase tracking-[0.28em] text-zinc-300">Base teórica</span>
+            </div>
+            <h2 class="text-5xl font-semibold tracking-tight text-white sm:text-6xl xl:text-7xl">
+              Problema del camino mínimo
+            </h2>
+            <p class="mt-6 max-w-2xl text-lg leading-8 text-zinc-300">
+              Qué significa cada etiqueta, en qué orden avanza el algoritmo y cómo se arma la ruta más barata
+              al terminar, explicado con dos ejemplos propios.
+            </p>
+          </div>
+          <div class="relative">
+            <div class="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/5 p-6 shadow-[0_20px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+              <div class="relative rounded-[24px] border border-white/10 bg-[#070b17]/80 p-6">
+                <p class="mb-3 text-xs uppercase tracking-[0.24em] text-zinc-500">En una frase</p>
+                <h3 class="text-2xl font-semibold text-white">Avanzar siempre por lo más cercano</h3>
+                <p class="mt-4 text-base leading-8 text-zinc-300">
+                  Desde el origen se van calculando los costos para llegar a cada vértice. En cada vuelta se
+                  fija el vértice pendiente más barato y desde él se revisan sus vecinos. Cuando ya se
+                  revisaron todos, se conoce la ruta más corta del origen a cualquier otro vértice.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pt-8 pb-20">
+      <div class="max-w-[1800px] mx-auto w-full px-6">
+        <div class="mb-12">
+          <p class="mb-3 text-sm uppercase tracking-[0.25em] text-zinc-500">Marco teórico</p>
+          <h2 class="mb-5 text-5xl font-semibold tracking-tight text-white">El algoritmo de Dijkstra</h2>
+          <p class="max-w-3xl text-xl leading-9 text-zinc-300">
+            Resuelve el problema del camino mínimo: dado un grafo donde cada arista tiene un peso, encuentra
+            el recorrido de menor costo desde un vértice de partida hasta los demás.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Origen</p>
+            <h3 class="mb-4 text-2xl font-semibold text-white">Edsger Dijkstra, 1959</h3>
+            <p class="text-base leading-8 text-zinc-300">
+              Lleva el nombre del científico neerlandés que lo publicó en 1959. Por eso también se le conoce
+              simplemente como el algoritmo del camino mínimo.
+            </p>
+          </article>
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Condición</p>
+            <h3 class="mb-4 text-2xl font-semibold text-white">Pesos no negativos</h3>
+            <p class="text-base leading-8 text-zinc-300">
+              El algoritmo da por definitivo al vértice más cercano en cada vuelta. Si existieran aristas con
+              peso negativo, un camino descartado antes podría terminar siendo más barato, y el resultado ya no
+              sería confiable. Por eso aquí todos los pesos son positivos.
+            </p>
+          </article>
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Utilidad</p>
+            <h3 class="mb-4 text-2xl font-semibold text-white">Rutas eficientes</h3>
+            <p class="text-base leading-8 text-zinc-300">
+              Sirve cuando hay que elegir el recorrido más conveniente dentro de una red: ahorrar tiempo,
+              distancia o recursos al moverse entre muchos puntos conectados.
+            </p>
+          </article>
+        </div>
+
+        <div class="mt-8 rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+          <h3 class="mb-4 text-2xl font-semibold text-white">¿Dónde aparece?</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="model-chip">Navegación y mapas</span>
+            <span class="model-chip">Redes de datos</span>
+            <span class="model-chip">Reparto y logística</span>
+            <span class="model-chip">Circuitos</span>
+            <span class="model-chip">Redes sociales</span>
+            <span class="model-chip">Videojuegos</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pt-8 pb-20">
+      <div class="max-w-[1800px] mx-auto w-full px-6">
+        <div class="mb-12">
+          <p class="mb-3 text-sm uppercase tracking-[0.25em] text-zinc-500">Etiquetado</p>
+          <h2 class="mb-5 text-5xl font-semibold tracking-tight text-white">Cómo leer una etiqueta [d, V]ₙ</h2>
+          <p class="max-w-3xl text-xl leading-9 text-zinc-300">
+            Cada vértice va guardando una etiqueta con tres datos. Con ella se sabe cuánto cuesta llegar y por dónde.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+              <p class="mb-4 font-serifMath text-3xl text-cyan-300">d</p>
+              <p class="text-base leading-8 text-zinc-300">El costo acumulado más bajo que se conoce, desde el origen hasta ese vértice.</p>
+            </article>
+            <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+              <p class="mb-4 font-serifMath text-3xl text-cyan-300">V</p>
+              <p class="text-base leading-8 text-zinc-300">El vértice anterior en ese recorrido, es decir, desde dónde se llegó.</p>
+            </article>
+            <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+              <p class="mb-4 font-serifMath text-3xl text-cyan-300">n</p>
+              <p class="text-base leading-8 text-zinc-300">El número de iteración, contando desde el origen, en que se obtuvo la etiqueta.</p>
+            </article>
+          </div>
+
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Ejemplo (del Ejemplo 2 del programa)</p>
+            <p class="mb-4 font-serifMath text-4xl text-white">[9, D]₂</p>
+            <ul class="space-y-2 text-base leading-7 text-zinc-300">
+              <li>Llegar a F cuesta 9 en total.</li>
+              <li>El último tramo de ese recorrido viene desde D.</li>
+              <li>Está a 2 iteraciones del origen: A → D → F.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="pt-8 pb-20">
+      <div class="max-w-[1800px] mx-auto w-full px-6">
+        <div class="mb-12">
+          <p class="mb-3 text-sm uppercase tracking-[0.25em] text-zinc-500">Procedimiento</p>
+          <h2 class="mb-5 text-5xl font-semibold tracking-tight text-white">Los pasos del algoritmo</h2>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Paso 1</p>
+            <h3 class="mb-4 text-xl font-semibold text-white">Etiquetar el origen</h3>
+            <p class="text-base leading-8 text-zinc-300">
+              El vértice de partida recibe <span class="font-serifMath text-white">[0, −]₀</span>: costo cero, nadie antes que él y ninguna iteración todavía.
+            </p>
+          </article>
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Paso 2</p>
+            <h3 class="mb-4 text-xl font-semibold text-white">Etiquetar sus vecinos</h3>
+            <p class="text-base leading-8 text-zinc-300">
+              A cada vecino se le suma el costo del vértice actual más el peso de la arista, y se anota desde dónde se llegó.
+            </p>
+          </article>
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Paso 3</p>
+            <h3 class="mb-4 text-xl font-semibold text-white">Elegir el más barato</h3>
+            <p class="text-base leading-8 text-zinc-300">
+              De los vértices pendientes, se toma el de menor acumulado y se marca como visitado. Si hay empate, sirve cualquiera.
+            </p>
+          </article>
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Paso 4</p>
+            <h3 class="mb-4 text-xl font-semibold text-white">Recalcular desde ahí</h3>
+            <p class="text-base leading-8 text-zinc-300">
+              Desde el vértice recién elegido se calculan nuevos costos para sus vecinos que aún no fueron visitados.
+            </p>
+          </article>
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Paso 5</p>
+            <h3 class="mb-4 text-xl font-semibold text-white">Quedarse con la mejor</h3>
+            <p class="text-base leading-8 text-zinc-300">
+              Si un vecino ya tenía etiqueta, se comparan: si la nueva es menor, se tacha la vieja; si es mayor, se tacha la nueva; si son iguales, se guardan ambas.
+            </p>
+          </article>
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Paso 6</p>
+            <h3 class="mb-4 text-xl font-semibold text-white">Repetir</h3>
+            <p class="text-base leading-8 text-zinc-300">
+              Se regresa al paso 3 una y otra vez hasta que no quede ningún vértice pendiente.
+            </p>
+          </article>
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur md:col-span-2">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Paso 7</p>
+            <h3 class="mb-4 text-xl font-semibold text-white">Armar la ruta</h3>
+            <p class="text-base leading-8 text-zinc-300">
+              El acumulado final de cada vértice es su distancia mínima. Para obtener la ruta se parte del destino y se
+              retrocede siguiendo la <span class="font-serifMath text-white">V</span> de cada etiqueta hasta llegar al origen.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="pt-8 pb-20">
+      <div class="max-w-[1800px] mx-auto w-full px-6">
+        <div class="mb-12">
+          <p class="mb-3 text-sm uppercase tracking-[0.25em] text-zinc-500">Ejemplo 1 · Grafo de 8 vértices</p>
+          <h2 class="mb-5 text-5xl font-semibold tracking-tight text-white">Cuando hay dos rutas igual de cortas</h2>
+          <p class="max-w-3xl text-xl leading-9 text-zinc-300">
+            Buscamos la ruta más barata de A a H. Estos son los momentos clave de la ejecución.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Etiquetas que cambian</p>
+            <ul class="space-y-3 text-base leading-7 text-zinc-300">
+              <li><span class="text-white">C</span> recibe primero <span class="font-serifMath">[4, A]₁</span>, pero yendo por B cuesta 2 + 1 = 3, así que queda <span class="font-serifMath text-white">[3, B]₂</span>.</li>
+              <li><span class="text-white">D</span> empieza con <span class="font-serifMath">[9, B]₂</span>; luego por E cuesta 6 + 2 = 8 y pasa a <span class="font-serifMath text-white">[8, E]₄</span>.</li>
+              <li><span class="text-white">F</span> cambia de <span class="font-serifMath">[11, E]₄</span> a <span class="font-serifMath text-white">[9, D]₅</span>.</li>
+              <li><span class="text-white">H</span> recibe 8 + 3 = 11 desde D y 9 + 2 = 11 desde F: <span class="text-white">dos etiquetas con el mismo acumulado</span>.</li>
+            </ul>
+          </article>
+
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Resultado</p>
+            <h3 class="mb-4 text-2xl font-semibold text-white">Longitud 11, dos rutas</h3>
+            <p class="text-base leading-8 text-zinc-300">Retrocediendo desde H por cada etiqueta:</p>
+            <ul class="mt-3 space-y-2 text-base leading-7 text-zinc-300">
+              <li><span class="text-white">H ← D ← E ← C ← B ← A</span> → ruta A, B, C, E, D, H</li>
+              <li><span class="text-white">H ← F ← D ← E ← C ← B ← A</span> → ruta A, B, C, E, D, F, H</li>
+            </ul>
+            <a href="./index.html?ejemplo=ejemplo1" class="mt-6 inline-flex items-center justify-center rounded-xl border border-white/20 bg-white px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-zinc-100">
+              Verlo paso a paso en el programa
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="pt-8 pb-20">
+      <div class="max-w-[1800px] mx-auto w-full px-6">
+        <div class="mb-12">
+          <p class="mb-3 text-sm uppercase tracking-[0.25em] text-zinc-500">Ejemplo 2 · Razonamiento</p>
+          <h2 class="mb-5 text-5xl font-semibold tracking-tight text-white">¿La etiqueta de F es [10, B]₃?</h2>
+          <p class="max-w-3xl text-xl leading-9 text-zinc-300">
+            En el grafo de 9 vértices del Ejemplo 2, un compañero dice que al buscar la ruta mínima de A a I
+            la etiqueta final de F es [10, B]₃. ¿Tiene razón?
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Interpretación</p>
+            <p class="text-base leading-8 text-zinc-300">
+              Hay que comprobar si [10, B]₃ es la etiqueta que F conserva al final, partiendo de A.
+            </p>
+          </article>
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Representación</p>
+            <p class="text-base leading-8 text-zinc-300">
+              Aristas que llegan a F: B → F con peso 6 y D → F con peso 3. Etiquetas previas: B = [4, C]₂ y D = [6, A]₁.
+            </p>
+          </article>
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Cálculo</p>
+            <p class="text-base leading-8 text-zinc-300">
+              Desde B: 4 + 6 = 10 → [10, B]₃. Desde D: 6 + 3 = 9 → [9, D]₂. Como 9 &lt; 10, se tacha la de B.
+            </p>
+          </article>
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Conclusión</p>
+            <p class="text-base leading-8 text-zinc-300">
+              F sí tuvo la etiqueta [10, B]₃, pero se tachó. La que conserva es <span class="font-serifMath text-white">[9, D]₂</span>, así que la afirmación es incorrecta.
+            </p>
+          </article>
+        </div>
+
+        <div class="mt-8">
+          <a href="./index.html?ejemplo=ejemplo2" class="inline-flex items-center justify-center rounded-xl border border-white/20 bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-zinc-100">
+            Verlo paso a paso en el programa
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="pt-8 pb-24">
+      <div class="max-w-[1800px] mx-auto w-full px-6">
+        <div class="mb-12">
+          <p class="mb-3 text-sm uppercase tracking-[0.25em] text-zinc-500">Repaso</p>
+          <h2 class="mb-5 text-5xl font-semibold tracking-tight text-white">Preguntas clave</h2>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Conceptos</p>
+            <dl class="space-y-4 text-base leading-7">
+              <div><dt class="font-semibold text-white">¿Qué busca el problema del camino mínimo?</dt>
+                <dd class="text-zinc-300">El recorrido de menor costo total entre un vértice de partida y los demás, en un grafo con pesos.</dd></div>
+              <div><dt class="font-semibold text-white">¿Qué entrega el algoritmo de Dijkstra?</dt>
+                <dd class="text-zinc-300">La distancia mínima desde el origen a cada vértice y, retrocediendo por las etiquetas, la ruta para lograrla.</dd></div>
+              <div><dt class="font-semibold text-white">¿Qué dice una etiqueta [d, V]ₙ?</dt>
+                <dd class="text-zinc-300">Cuánto cuesta llegar (d), desde qué vértice se llega (V) y en qué iteración se obtuvo (n).</dd></div>
+              <div><dt class="font-semibold text-white">¿Por qué se comparan etiquetas?</dt>
+                <dd class="text-zinc-300">Porque un vértice puede alcanzarse por varios caminos; se compara para quedarse siempre con el más barato.</dd></div>
+            </dl>
+          </article>
+          <article class="rounded-[28px] border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <p class="mb-4 text-sm font-semibold text-cyan-300">Análisis</p>
+            <dl class="space-y-4 text-base leading-7">
+              <div><dt class="font-semibold text-white">Grafo o matriz, ¿cambia el método?</dt>
+                <dd class="text-zinc-300">No. En el grafo las etiquetas se anotan junto a cada vértice; con la matriz se anotan en una tabla de iteraciones. Los cálculos son los mismos.</dd></div>
+              <div><dt class="font-semibold text-white">¿Qué pasa si un vértice recibe varias etiquetas?</dt>
+                <dd class="text-zinc-300">Se tacha la de mayor acumulado. En el Ejemplo 2, F pasa de [10, B]₃ a [9, D]₂.</dd></div>
+              <div><dt class="font-semibold text-white">¿Puede haber más de una ruta mínima?</dt>
+                <dd class="text-zinc-300">Sí: si dos etiquetas empatan en el menor acumulado, cada una da una ruta. En el Ejemplo 1, H tiene dos etiquetas de 11.</dd></div>
+            </dl>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
